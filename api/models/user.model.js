@@ -25,6 +25,6 @@ const User = db.define('users', {
     type: DataTypes.DECIMAL(5, 2),
     defaultValue: 0
   }
-}, { timestamps: true })
+}, { timestamps: true, underscored: true })
 
 export default User

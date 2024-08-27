@@ -1,0 +1,26 @@
+import User from "../models/user.model.js";
+
+async function registerUser (user) {
+  try {
+    return await User.create(user)
+  } catch (error) {
+    throw error 
+  }
+}
+
+async function getUserByEmail (email) {
+  try {
+    return await User.findOne({
+      where: { email },
+      attributes: { exclude: ['createdAt', 'updatedAt'] }
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
+
+export default {
+  registerUser,
+  getUserByEmail
+}

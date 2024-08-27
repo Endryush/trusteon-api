@@ -1,19 +1,19 @@
 import logger from "../logger.js";
-import NotFoundException from "./NotFoundException.js";
-import BadRequestException from "./BadRequestException.js";
-import AlreadyExistException from './AlreadyExistException.js'
+
+const exceptionHandlers = {
+  NotFoundException: (error) => ({ status: error.statusCode, message: error.message }),
+  BadRequestException: (error) => ({ status: error.statusCode, message: error.message }),
+  AlreadyExistException: (error) => ({ status: error.statusCode, message: error.message }),
+  UnauthorizedException: (error) => ({ status: error.statusCode, message: error.message }),
+}
 
 export default function exceptions (error, req, res, next) {
   logger.error(`Error processing request: ${req.method} - ${req.baseUrl} - ${error.message ?? JSON.stringify(error)}`)
-  if (error instanceof NotFoundException) {
-    return res.status(error.statusCode).json({ error: error.message });
-  }
-  if (error instanceof BadRequestException) {
-    return res.status(error.statusCode).json({ error: error.message })
-  }
-
-  if (error instanceof AlreadyExistException) {
-    return res.status(error.statusCode).json({ error: error.message })
+  
+  const handler = exceptionHandlers[error.constructor.name];
+  if (handler) {
+    const { status, message } = handler(error);
+    return res.status(status).json({ error: message });
   }
 
   res.status(500).send({ error: error.message ?? error })

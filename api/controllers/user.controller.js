@@ -21,7 +21,7 @@ async function login (req, res, next) {
     const { email, password } = req.body
     const user = await userService.login(email, password)
     res.header('Authorization', `Bearer ${user.token}`)
-    res.status(204).send()
+    res.status(200).send(user.formattedUser)
     logger.info('POST IN login')
   } catch (error) {
     next(error)

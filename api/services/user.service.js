@@ -1,9 +1,8 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import userRepository from "../repositories/user.repository.js";
 import AlreadyExistException from '../exceptions/AlreadyExistException.js';
 import NotFoundException from '../exceptions/NotFoundException.js';
 import UnauthorizedException from '../exceptions/UnauthorizedException.js';
+import  { hashPassword, comparePassword, generateToken } from '../utils/bcrypt.js';
 
 async function registerUser (user) {
   const alreadyIsUser = await userRepository.getUserByEmail(user.email);
@@ -34,23 +33,13 @@ async function login (email, password) {
   const token = generateToken(user.id)
 
   return {
+    formattedUser: {
+      name: user.name,
+      email: user.email
+    },
     token
   }
     
-}
-
-async function hashPassword (password)  {
-  const salt = await bcrypt.genSalt(10);
-
-  return await bcrypt.hash(password, salt);
-};
-
-async function comparePassword (password, hash) {
-  return await bcrypt.compare(password, hash);
-};
-
-function generateToken (id) {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '24h' })
 }
 
 export default {

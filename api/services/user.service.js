@@ -12,7 +12,7 @@ async function registerUser (user) {
     
   const hashedPassword = await hashPassword(user.password)
   const userCreated = await userRepository.registerUser({ ...user, password: hashedPassword })
-  const token = generateToken(userCreated.id)
+  const token = generateToken(userCreated)
 
   return {
     token
@@ -30,7 +30,7 @@ async function login (email, password) {
     throw new UnauthorizedException('email or password Invalid')
   }
 
-  const token = generateToken(user.id)
+  const token = generateToken(user)
 
   return {
     formattedUser: {

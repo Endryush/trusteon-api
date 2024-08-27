@@ -15,6 +15,19 @@ async function registerUser (req, res, next) {
     next(error)
   }
 }
+
+async function login (req, res, next) {
+  try {
+    const { email, password } = req.body
+    const user = await userService.login(email, password)
+    res.header('Authorization', `Bearer ${user.token}`)
+    res.status(204).send()
+    logger.info('POST IN login')
+  } catch (error) {
+    next(error)
+  }
+}
 export default {
-  registerUser
+  registerUser,
+  login
 }

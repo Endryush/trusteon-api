@@ -9,7 +9,7 @@ async function registerUser (req, res, next) {
     const userCreated = await userService.registerUser(user)
 
     res.header('Authorization', `Bearer ${userCreated.token}`)
-    res.status(201).send()
+    res.status(201).send(userCreated.user)
     logger.info('POST IN registerUser')
   } catch (error) {
     next(error)

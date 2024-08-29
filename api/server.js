@@ -4,10 +4,12 @@ import routes from './routes/index.js'
 import exceptions from './exceptions/index.js'
 
 const app = express()
-
 app
   .use(express.json())
-  .use(cors())
+  .use(cors({
+    origin: '*',
+    exposedHeaders: ['Authorization'],
+  }))
   .use('/api', routes)
   .use(exceptions)
 

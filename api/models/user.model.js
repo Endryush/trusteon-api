@@ -12,6 +12,9 @@ const User = db.define('users', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  user_image: {
+    type: DataTypes.STRING
+  },
   email: {
     type: DataTypes.STRING,
     allowNull: false,

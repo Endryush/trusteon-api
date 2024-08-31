@@ -2,13 +2,14 @@ import productRepository from "../repositories/product.repository.js";
 
 
 async function createProduct (product) {
-  try {
-    return await productRepository.createProduct(product)
-  } catch (error) {
-    throw error 
-  }
+  return await productRepository.createProduct(product)
+}
+
+async function getProducts (product) {
+  return await productRepository.getProducts()
 }
 
 export default {
-  createProduct
+  createProduct,
+  getProducts
 }

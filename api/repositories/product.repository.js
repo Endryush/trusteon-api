@@ -8,6 +8,17 @@ async function createProduct (product) {
   }
 }
 
+async function getProducts () {
+  try {
+    return await Product.findAll({
+      attributes: { exclude: ['createdAt', 'updatedAt'] }
+    })
+  } catch (error) {
+    throw error 
+  }
+}
+
 export default {
-  createProduct
+  createProduct,
+  getProducts
 }

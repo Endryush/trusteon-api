@@ -14,6 +14,16 @@ async function createProduct (req, res, next) {
   }
 }
 
+async function getProducts (req, res, next) {
+  try {
+    res.status(200).send(await productService.getProducts())
+    logger.info('GET IN getProducts')
+  } catch (error) {
+    next(error)
+  }
+}
+
 export default {
-  createProduct
+  createProduct,
+  getProducts
 }

@@ -19,7 +19,7 @@ module.exports = {
         type: DataTypes.ARRAY(DataTypes.STRING), // Array de strings para imagens
         defaultValue: []
       },
-      value: {
+      total_amount: {
         type: DataTypes.DOUBLE,
         allowNull: false
       },

@@ -26,7 +26,24 @@ async function getProducts () {
   }
 }
 
+async function getProductById (id) {
+  try {
+    return await Product.findByPk(id, {
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: [['name', 'author']]
+        }
+      ],
+    })
+  } catch (error) {
+    throw error 
+  }
+}
+
 export default {
   createProduct,
-  getProducts
+  getProducts,
+  getProductById
 }

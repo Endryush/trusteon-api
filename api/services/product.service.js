@@ -9,7 +9,13 @@ async function getProducts () {
   return await productRepository.getProducts()
 }
 
+
+async function getProductById(id) {
+  return await productRepository.getProductById(id)
+}
+
 export default {
   createProduct,
-  getProducts
+  getProducts,
+  getProductById
 }

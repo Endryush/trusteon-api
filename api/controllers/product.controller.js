@@ -1,5 +1,6 @@
 import productService from "../services/product.service.js";
 import { validateProduct } from "../helpers/validateProduct.js";
+import NotFoundException from '../exceptions/NotFoundException.js';
 
 async function createProduct (req, res, next) {
   try {
@@ -23,7 +24,22 @@ async function getProducts (req, res, next) {
   }
 }
 
+async function getProductById (req, res, next) {
+  try {
+    const { id } = req.params
+    const product = await productService.getProductById(id)
+
+    if(!product) throw new NotFoundException('Product not found')
+
+    res.send(product)
+    logger.info('GET IN getProductById')
+  } catch (error) {
+   next(error) 
+  }
+}
+
 export default {
   createProduct,
-  getProducts
+  getProducts,
+  getProductById
 }

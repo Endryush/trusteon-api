@@ -8,5 +8,6 @@ const router = express.Router()
 router
   .post('/add', jwtUserAuth ,productController.createProduct)
   .get('/', productController.getProducts)
+  .get('/:id', productController.getProductById)
 
 export default router

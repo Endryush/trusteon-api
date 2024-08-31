@@ -42,8 +42,21 @@ async function getProductById (id) {
   }
 }
 
+async function updateProduct (product) {
+  try {
+    await Product.update(product, {
+      where: { id: product.id }
+    })
+
+    return await getProductById(product.id)
+  } catch (error) {
+    throw error
+  }
+}
+
 export default {
   createProduct,
   getProducts,
-  getProductById
+  getProductById,
+  updateProduct
 }

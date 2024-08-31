@@ -9,5 +9,6 @@ router
   .post('/add', jwtUserAuth ,productController.createProduct)
   .get('/', productController.getProducts)
   .get('/:id', productController.getProductById)
+  .patch('/edit', jwtUserAuth, productController.updateProduct)
 
 export default router

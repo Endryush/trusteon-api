@@ -38,8 +38,22 @@ async function getProductById (req, res, next) {
   }
 }
 
+async function updateProduct (req, res, next) {
+  try {
+    const product = req.body
+    validateProduct(product)
+
+    const updatedProduct = await productService.updateProduct(product)
+    res.send(updatedProduct)
+    logger.info('PUT IN updateProduct')
+  } catch (error) {
+    next(error)
+  }
+}
+
 export default {
   createProduct,
   getProducts,
-  getProductById
+  getProductById,
+  updateProduct
 }

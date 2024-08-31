@@ -1,4 +1,5 @@
 import productRepository from "../repositories/product.repository.js";
+import { formatBeforeUpdateProduct } from "../utils/productUpdate.js";
 
 
 async function createProduct (product) {
@@ -14,8 +15,15 @@ async function getProductById(id) {
   return await productRepository.getProductById(id)
 }
 
+async function updateProduct (product) {
+  const formattedProduct = formatBeforeUpdateProduct(product)
+  return await productRepository.updateProduct(formattedProduct)
+}
+
+
 export default {
   createProduct,
   getProducts,
-  getProductById
+  getProductById,
+  updateProduct
 }

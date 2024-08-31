@@ -17,6 +17,10 @@ const Product = db.define('products', {
     type: DataTypes.ARRAY(DataTypes.STRING),
     defaultValue: []
   },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
   totalAmount: {
     type: DataTypes.DOUBLE,
     allowNull: false

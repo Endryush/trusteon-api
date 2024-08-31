@@ -23,7 +23,7 @@ module.exports = {
         type: DataTypes.DOUBLE,
         allowNull: false
       },
-      owner_id: {
+      author_id: {
         type: DataTypes.INTEGER,
         references: {
           model: 'users',

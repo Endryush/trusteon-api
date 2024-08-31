@@ -16,10 +16,10 @@ export default async function jwtUserAuth (req, res, next) {
       return res.status(401).json({ error: 'Invalid token.' });
     }
 
-    const { ownerId, id, email } = req.body
+    const { authorId, id, email } = req.body
     // Adicione o usuário decodificado à solicitação
     const user = tokenDecoded;
-    const reqUserId = ownerId || id
+    const reqUserId = authorId || id
     if(user.email === email && reqUserId === user.id) {
       next();
       return

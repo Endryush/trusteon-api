@@ -5,7 +5,7 @@ async function createProduct (product) {
   return await productRepository.createProduct(product)
 }
 
-async function getProducts (product) {
+async function getProducts () {
   return await productRepository.getProducts()
 }
 

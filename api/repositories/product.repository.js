@@ -1,4 +1,5 @@
 import Product from "../models/product.model.js";
+import User from "../models/user.model.js";
 
 async function createProduct (product) {
   try {
@@ -11,7 +12,14 @@ async function createProduct (product) {
 async function getProducts () {
   try {
     return await Product.findAll({
-      attributes: { exclude: ['createdAt', 'updatedAt', 'description', 'categories'] }
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: [['name', 'author']]
+        }
+      ],
+      attributes: { exclude: ['createdAt', 'updatedAt', 'description', 'categories', 'authorId' ] }
     })
   } catch (error) {
     throw error 

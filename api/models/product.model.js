@@ -29,7 +29,7 @@ const Product = db.define('products', {
     type: DataTypes.DOUBLE,
     allowNull: false
   },
-  ownerId: {
+  authorId: {
     type: DataTypes.INTEGER,
     references: {
       model: User,
@@ -39,6 +39,6 @@ const Product = db.define('products', {
   }
 }, { timestamps: true, underscored: true });
 
-Product.belongsTo(User, { foreignKey: 'ownerId' });
+Product.belongsTo(User, { foreignKey: 'authorId' });
 
 export default Product;

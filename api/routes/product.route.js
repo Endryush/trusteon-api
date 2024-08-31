@@ -10,5 +10,6 @@ router
   .get('/', productController.getProducts)
   .get('/:id', productController.getProductById)
   .patch('/edit', jwtUserAuth, productController.updateProduct)
+  .delete('/delete', jwtUserAuth, productController.deleteProduct)
 
 export default router

@@ -54,9 +54,21 @@ async function updateProduct (product) {
   }
 }
 
+
+async function deleteProduct (id) {
+  try {
+    return await Product.destroy({
+      where: { id }
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
 export default {
   createProduct,
   getProducts,
   getProductById,
-  updateProduct
+  updateProduct,
+  deleteProduct
 }

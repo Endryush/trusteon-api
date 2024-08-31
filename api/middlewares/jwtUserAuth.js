@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import { decodeToken } from "../utils/bcrypt.js"
 
 
 export default async function jwtUserAuth (req, res, next) {
@@ -17,7 +16,6 @@ export default async function jwtUserAuth (req, res, next) {
     }
 
     const { authorId, id, email } = req.body
-    // Adicione o usuário decodificado à solicitação
     const user = tokenDecoded;
     const reqUserId = authorId || id
     if(user.email === email && reqUserId === user.id) {

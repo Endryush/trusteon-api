@@ -11,7 +11,7 @@ async function createProduct (product) {
 async function getProducts () {
   try {
     return await Product.findAll({
-      attributes: { exclude: ['createdAt', 'updatedAt'] }
+      attributes: { exclude: ['createdAt', 'updatedAt', 'description', 'categories'] }
     })
   } catch (error) {
     throw error 

@@ -16,7 +16,7 @@ module.exports = {
         allowNull: false
       },
       product_images: {
-        type: DataTypes.ARRAY(DataTypes.STRING), // Array de strings para imagens
+        type: DataTypes.ARRAY(DataTypes.STRING),
         defaultValue: []
       },
       total_amount: {
@@ -26,7 +26,7 @@ module.exports = {
       owner_id: {
         type: DataTypes.INTEGER,
         references: {
-          model: 'users', // Referência à tabela users
+          model: 'users',
           key: 'id'
         },
         allowNull: false

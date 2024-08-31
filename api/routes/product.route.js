@@ -1,10 +1,11 @@
 import express from 'express';
 import productController from '../controllers/product.controller.js';
+import jwtUserAuth from '../middlewares/jwtUserAuth.js';
 
 
 const router = express.Router()
 
 router
-  .post('/add', productController.createProduct)
+  .post('/add', jwtUserAuth ,productController.createProduct)
 
 export default router

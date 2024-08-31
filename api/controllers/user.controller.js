@@ -1,7 +1,6 @@
 import userService from "../services/user.service.js"
-import NotFoundException from "../exceptions/NotFoundException.js";
 import { validateUser } from "../helpers/validateUserRequest.js";
-import BadRequestException from "../exceptions/BadRequestException.js";
+import UnauthorizedException from "../exceptions/UnauthorizedException.js";
 
 async function registerUser (req, res, next) {
   try {
@@ -33,8 +32,7 @@ async function getUserMe (req, res, next) {
   try {
     const { authorization  } = req.headers
 
-    if (!authorization ) throw new BadRequestException('Missing Authorization')
-
+    if (!authorization ) throw new UnauthorizedException('Missing Authorization')
 
     const token = authorization .split(' ')[1]
     

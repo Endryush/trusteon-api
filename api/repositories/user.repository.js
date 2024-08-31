@@ -23,7 +23,7 @@ async function getUserById (id) {
   try {
     return await User.findOne({
       where: { id },
-      attributes: { exclude: ['id', 'password', 'createdAt', 'updatedAt'] }
+      attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
     })
   } catch (error) {
     throw error

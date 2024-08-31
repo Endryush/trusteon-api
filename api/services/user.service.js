@@ -35,9 +35,11 @@ async function login (email, password) {
 
   return {
     formattedUser: {
+      id: user.id,
       name: user.name,
       email: user.email,
-      user_image: user.user_image
+      user_image: user.user_image,
+      reputation: user.reputation
     },
     token
   }

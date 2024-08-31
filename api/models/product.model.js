@@ -1,0 +1,36 @@
+import { DataTypes } from 'sequelize';
+import db from '../config/db.js';
+import User from './user.model.js';
+
+const Product = db.define('products', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  productImages: {
+    type: DataTypes.ARRAY(DataTypes.STRING),
+    defaultValue: []
+  },
+  totalAmount: {
+    type: DataTypes.DOUBLE,
+    allowNull: false
+  },
+  ownerId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: User,
+      key: 'id'
+    },
+    allowNull: false
+  }
+}, { timestamps: true, underscored: true });
+
+Product.belongsTo(User, { foreignKey: 'ownerId' });
+
+export default Product;

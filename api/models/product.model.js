@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
 import User from './user.model.js';
+import ServiceStatus from './service-status.model.js';
 
 const Product = db.define('products', {
   id: {
@@ -36,9 +37,17 @@ const Product = db.define('products', {
       key: 'id'
     },
     allowNull: false
+  },
+  serviceStatus: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: ServiceStatus,
+      key: 'id'
+    }
   }
 }, { timestamps: true, underscored: true });
 
 Product.belongsTo(User, { foreignKey: 'authorId' });
+Product.belongsTo(ServiceStatus, { foreignKey: 'serviceStatus' });
 
 export default Product;

@@ -18,8 +18,9 @@ async function createProduct (req, res, next) {
 
 async function getProducts (req, res, next) {
   try {
-    res.status(200).send(await productService.getProducts())
-    logger.info('GET IN getProducts')
+    const { authorId } = req.query
+    res.status(200).send(await productService.getProducts(authorId))
+    logger.info(`GET IN getProducts ${authorId ? 'by author' : ''}`)
   } catch (error) {
     next(error)
   }

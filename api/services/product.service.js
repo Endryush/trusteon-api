@@ -6,7 +6,8 @@ async function createProduct (product) {
   return await productRepository.createProduct(product)
 }
 
-async function getProducts () {
+async function getProducts (authorId) {
+  if (authorId) return productRepository.getProductByAuthor(authorId)
   return await productRepository.getProducts()
 }
 

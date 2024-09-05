@@ -66,10 +66,21 @@ async function deleteProduct (id) {
   }
 }
 
+async function getProductByAuthor (authorId) {
+  try {
+    return await Product.findAll({
+      where: { authorId },
+    })
+  } catch (error) {
+    
+  }
+}
+
 export default {
   createProduct,
   getProducts,
   getProductById,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  getProductByAuthor
 }

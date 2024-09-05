@@ -39,15 +39,11 @@ const Product = db.define('products', {
     allowNull: false
   },
   serviceStatus: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: ServiceStatus,
-      key: 'id'
-    }
+    type: DataTypes.STRING,
+    allowNull: true
   }
 }, { timestamps: true, underscored: true });
 
 Product.belongsTo(User, { foreignKey: 'authorId' });
-Product.belongsTo(ServiceStatus, { foreignKey: 'serviceStatus' });
 
 export default Product;

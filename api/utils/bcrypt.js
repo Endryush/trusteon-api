@@ -13,7 +13,7 @@ export async function comparePassword (password, hash) {
 };
 
 export function generateToken (user) {
-  return jwt.sign({ id: user.id, email: user.email  }, process.env.JWT_SECRET, { expiresIn: '24h' })
+  return jwt.sign({ id: user.id, email: user.email  }, process.env.JWT_SECRET, { expiresIn: '7d' })
 }
 
 export function decodeToken (token) {

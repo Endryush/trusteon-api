@@ -18,11 +18,6 @@ async function getProducts () {
           model: User,
           as: 'user',
           attributes: [['name', 'author']]
-        },
-        {
-          model: ServiceStatus,
-          as: 'serviceStatus',
-          attributes: ['status']
         }
       ],
       attributes: { exclude: ['createdAt', 'updatedAt', 'description', 'categories', 'authorId' ] }

@@ -35,7 +35,7 @@ async function getUserMe (req, res, next) {
     if (!authorization ) throw new UnauthorizedException('Missing Authorization')
 
     const token = authorization .split(' ')[1]
-    
+    res.header('Authorization', `Bearer ${token}`)
     res.send(await userService.getUserMe(token))
   } catch (error) {
     next(error)

@@ -55,12 +55,12 @@ async function updateProduct (req, res, next) {
 
 async function deleteProduct (req, res, next) {
   try {
-    const { productId } = req.body
-    if (!productId) return new BadRequestException('Product ID is required')
+    const { id } = req.params
+    if (!id) return new BadRequestException('Product ID is required')
 
-    await productService.deleteProduct(productId)
+    await productService.deleteProduct(id)
     res.status(204).send()
-    logger.warn(`Deleted product ${productId}`)
+    logger.warn(`Deleted product ${id}`)
 
   } catch (error) {
     next(error)

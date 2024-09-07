@@ -16,9 +16,9 @@ export default async function jwtUserAuth (req, res, next) {
     }
 
     const data = Object.keys(req.body).length > 0 ? req.body : req.query
-    const { authorId, id, email } = data
+    const { authorId, id, userId, email } = data
     const user = tokenDecoded;
-    const reqUserId = authorId || id
+    const reqUserId = userId || authorId || id
     if(user.email === email && parseInt(reqUserId) === user.id) {
       next();
       return

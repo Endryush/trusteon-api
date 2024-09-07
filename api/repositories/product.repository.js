@@ -12,7 +12,7 @@ async function createProduct (product) {
 
 async function getProducts () {
   try {
-    return await Product.findAll({
+    const results = await Product.findAndCountAll({
       include: [
         {
           model: User,
@@ -22,6 +22,11 @@ async function getProducts () {
       ],
       attributes: { exclude: ['createdAt', 'updatedAt', 'description', 'categories', 'authorId' ] }
     })
+
+    return {
+      services: results.rows,
+      count: results.count
+    }
   } catch (error) {
     throw error 
   }

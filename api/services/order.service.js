@@ -5,6 +5,11 @@ async function createOrder(order) {
   return await orderRepository.createOrder(order)
 }
 
+async function getUserOrders (id) {
+  return await orderRepository.getUserOrders(id)
+}
+
 export default {
-  createOrder
+  createOrder,
+  getUserOrders
 }

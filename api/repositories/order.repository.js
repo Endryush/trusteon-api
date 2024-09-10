@@ -9,6 +9,19 @@ async function createOrder (order) {
   }
 }
 
+async function getUserOrders (id) {
+  try {
+    return await Order.findAll({
+      where: {
+        userId: id
+      }
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
 export default {
-  createOrder
+  createOrder,
+  getUserOrders
 }

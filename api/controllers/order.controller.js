@@ -14,6 +14,18 @@ async function createOrder (req, res, next) {
   }
 }
 
+async function getUserOrders (req, res, next) {
+  try {
+    const { userId } = req.query
+
+    res.send(await orderService.getUserOrders(userId))
+    logger.info('GET IN getUserOrders')
+  } catch (error) {
+    next(error)
+  }
+}
+
 export default {
-  createOrder
+  createOrder,
+  getUserOrders
 }

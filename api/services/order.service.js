@@ -6,7 +6,17 @@ async function createOrder(order) {
 }
 
 async function getUserOrders (id) {
-  return await orderRepository.getUserOrders(id)
+  const orders =  await orderRepository.getUserOrders(id)
+  const formattedOrders = orders.map((order) => {
+    const plainOrder = order.get({ plain: true });
+    const status = plainOrder.services_status.status
+    delete plainOrder.services_status
+    return {
+      ...plainOrder,
+      status,
+    }
+  })
+  return formattedOrders
 }
 
 export default {

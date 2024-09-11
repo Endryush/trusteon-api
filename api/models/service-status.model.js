@@ -12,6 +12,6 @@ const ServiceStatus = db.define('services_status', {
     type: DataTypes.STRING,
     allowNull: false
   }
-}, { timestamps: true, underscored: true });
+}, { timestamps: true, underscored: true, tableName: 'services_status' });
 
 export default ServiceStatus;

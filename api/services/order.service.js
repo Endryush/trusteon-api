@@ -19,7 +19,17 @@ async function getUserOrders (id) {
   return formattedOrders
 }
 
+async function updateOrderStatus (order) {
+  const orderFormatted = {
+    id: order.orderId,
+    status: order.status
+  }
+
+  return await orderRepository.updateOrderStatus(orderFormatted)
+}
+
 export default {
   createOrder,
-  getUserOrders
+  getUserOrders,
+  updateOrderStatus
 }

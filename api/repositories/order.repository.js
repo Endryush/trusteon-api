@@ -1,4 +1,5 @@
 
+import { where } from 'sequelize'
 import Order from '../models/order.model.js'
 import Product from '../models/product.model.js'
 import ServiceStatus from '../models/service-status.model.js'
@@ -29,13 +30,28 @@ async function getUserOrders (id) {
           attributes: ['name']
         }
       ],
+      order: [['createdAt', 'DESC']]
     })
   } catch (error) {
     throw error
   }
 }
 
+async function updateOrderStatus (order) {
+  try {
+    return await Order.update( { orderStatus: order.status }, 
+      { 
+        fields: ['orderStatus'],
+        where: { id: order.id }
+      },
+    )
+  } catch {
+    throw error
+  }
+}
+
 export default {
   createOrder,
-  getUserOrders
+  getUserOrders,
+  updateOrderStatus
 }

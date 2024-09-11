@@ -9,5 +9,6 @@ const router = express.Router()
 router
   .post('/', jwtUserAuth , orderController.createOrder)
   .get('/', jwyOrders , orderController.getUserOrders)
+  .patch('/', jwyOrders , orderController.updateOrderStatus)
 
 export default router

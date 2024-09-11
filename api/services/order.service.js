@@ -28,8 +28,13 @@ async function updateOrderStatus (order) {
   return await orderRepository.updateOrderStatus(orderFormatted)
 }
 
+async function getOrderByAuthors (id) {
+  return await orderRepository.getOrderByAuthors(id)
+}
+
 export default {
   createOrder,
   getUserOrders,
-  updateOrderStatus
+  updateOrderStatus,
+  getOrderByAuthors
 }

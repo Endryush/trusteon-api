@@ -3,6 +3,7 @@ import { where } from 'sequelize'
 import Order from '../models/order.model.js'
 import Product from '../models/product.model.js'
 import ServiceStatus from '../models/service-status.model.js'
+import User from '../models/user.model.js'
 
 async function createOrder (order) {
   try {
@@ -50,8 +51,34 @@ async function updateOrderStatus (order) {
   }
 }
 
+async function getOrderByAuthors (id) {
+  try {
+    return await Order.findAll({
+      where: {
+        userId: id
+      },
+      include: [
+        {
+          model: Product,
+          as: 'product',
+          attributes: ['name']
+        },
+        {
+          model: User,
+          as: 'user',
+          attributes: [['name', 'requestor']]
+        }
+      ],
+      order: [['createdAt', 'ASC']]
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
 export default {
   createOrder,
   getUserOrders,
-  updateOrderStatus
+  updateOrderStatus,
+  getOrderByAuthors
 }

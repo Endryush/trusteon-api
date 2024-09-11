@@ -31,9 +31,20 @@ async function updateOrderStatus (req, res, next) {
     const order = req.body
 
     if (!order.orderId || !order.status) throw new BadRequestException('Invalid order')
-
-    res.send(await orderService.updateOrderStatus(order))
+    await orderService.updateOrderStatus(order)
+    res.status(204).send()
     logger.info('PATCH IN updateOrderStatus')
+  } catch (error) {
+    next(error)
+  }
+}
+
+async function getOrderByAuthors (req, res, next) {
+  try {
+    const { userId } = req.query
+    if (!userId) throw new BadRequestException('Informe um autor válido')
+    res.send(await orderService.getOrderByAuthors(userId))
+    logger.info('GET IN getOrderByAuthors')
   } catch (error) {
     next(error)
   }
@@ -42,5 +53,6 @@ async function updateOrderStatus (req, res, next) {
 export default {
   createOrder,
   getUserOrders,
-  updateOrderStatus
+  updateOrderStatus,
+  getOrderByAuthors
 }

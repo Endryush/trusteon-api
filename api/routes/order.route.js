@@ -10,5 +10,6 @@ router
   .post('/', jwtUserAuth , orderController.createOrder)
   .get('/', jwyOrders , orderController.getUserOrders)
   .patch('/', jwyOrders , orderController.updateOrderStatus)
+  .get('/author', jwyOrders, orderController.getOrderByAuthors)
 
 export default router

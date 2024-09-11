@@ -1,5 +1,6 @@
 
 import Order from '../models/order.model.js'
+import Product from '../models/product.model.js'
 import ServiceStatus from '../models/service-status.model.js'
 
 async function createOrder (order) {
@@ -21,6 +22,11 @@ async function getUserOrders (id) {
           model: ServiceStatus,
           as: 'services_status',
           attributes: ['status']
+        },
+        {
+          model: Product,
+          as: 'product',
+          attributes: ['name']
         }
       ],
     })

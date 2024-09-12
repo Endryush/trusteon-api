@@ -50,9 +50,19 @@ async function getOrderByAuthors (req, res, next) {
   }
 }
 
+async function getAllStatusOrder (req, res, next) {
+  try {
+    res.send(await orderService.getAllStatusOrder())
+    logger.info('GET IN getAllStatusOrder')
+  } catch (error) {
+    next(error)
+  }
+}
+
 export default {
   createOrder,
   getUserOrders,
   updateOrderStatus,
-  getOrderByAuthors
+  getOrderByAuthors,
+  getAllStatusOrder
 }

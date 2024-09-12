@@ -11,5 +11,6 @@ router
   .get('/', jwyOrders , orderController.getUserOrders)
   .patch('/', jwyOrders , orderController.updateOrderStatus)
   .get('/author', jwyOrders, orderController.getOrderByAuthors)
+  .get('/allStatus', orderController.getAllStatusOrder)
 
 export default router

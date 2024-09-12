@@ -1,5 +1,3 @@
-
-import { where } from 'sequelize'
 import Order from '../models/order.model.js'
 import Product from '../models/product.model.js'
 import ServiceStatus from '../models/service-status.model.js'
@@ -76,9 +74,20 @@ async function getOrderByAuthors (id) {
   }
 }
 
+async function getAllStatusOrder () {
+  try {
+    return await ServiceStatus.findAll({
+      attributes: ['id', 'status'],
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
 export default {
   createOrder,
   getUserOrders,
   updateOrderStatus,
-  getOrderByAuthors
+  getOrderByAuthors,
+  getAllStatusOrder
 }

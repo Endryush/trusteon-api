@@ -1,0 +1,10 @@
+export const ALL_STATUS_ID = {
+  OPEN: 1,
+  WAIT_LIST: 2,
+  CLOSED: 3,
+  NOT_LISTED: 4,
+  WAITING_APPROVE: 5,
+  PENDING_REVIEW: 6,
+  APPROVED: 7,
+  IN_PROGRESS: 8
+}

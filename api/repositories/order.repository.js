@@ -55,7 +55,7 @@ async function getOrderByAuthors (id) {
   try {
     return await Order.findAll({
       where: {
-        userId: id
+        authorId: id
       },
       include: [
         {

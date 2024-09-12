@@ -78,6 +78,7 @@ async function getAllStatusOrder () {
   try {
     return await ServiceStatus.findAll({
       attributes: ['id', 'status'],
+      order: [['id', 'ASC']]
     })
   } catch (error) {
     throw error

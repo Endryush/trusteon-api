@@ -44,8 +44,33 @@ async function getOrderByAuthors (id) {
 async function getAllStatusOrder () {
   const allStatus = await orderRepository.getAllStatusOrder()
   const statusFiltered = allStatus.filter((status) => ENABLED_STATUS.includes(status.id))
+  const finalStatus = statusFiltered.map((status) => {
+    const plainStatus = status.get({ plain: true });
+    return {
+      ...plainStatus,
+      applicableStatus: getApplicableStatus(plainStatus.id)
+    }
+  })
+  return finalStatus
+}
 
-  return statusFiltered
+function getApplicableStatus (status) {
+  const applicableStatus = []
+  switch (status) {
+    case(ALL_STATUS_ID.OPEN):
+      applicableStatus.push(ALL_STATUS_ID.IN_PROGRESS, ALL_STATUS_ID.WAIT_LIST)
+      break
+    case (ALL_STATUS_ID.WAIT_LIST):
+      applicableStatus.push(ALL_STATUS_ID.OPEN, ALL_STATUS_ID.IN_PROGRESS)
+      break
+    case (ALL_STATUS_ID.IN_PROGRESS):
+      applicableStatus.push(ALL_STATUS_ID.OPEN, ALL_STATUS_ID.WAITING_APPROVE)
+      break
+    case (ALL_STATUS_ID.PENDING_REVIEW):
+      applicableStatus.push(ALL_STATUS_ID.APPROVED, ALL_STATUS_ID.WAITING_APPROVE)
+      break
+  }
+  return applicableStatus
 }
 
 export default {

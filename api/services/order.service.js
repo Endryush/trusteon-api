@@ -16,13 +16,22 @@ async function createOrder(order) {
 
 async function getUserOrders (id) {
   const orders =  await orderRepository.getUserOrders(id)
+  const allStatus = await orderRepository.getAllStatusOrder()
   const formattedOrders = orders.map((order) => {
     const plainOrder = order.get({ plain: true });
     const status = plainOrder.services_status.status
     delete plainOrder.services_status
+    let applicableStatus = []
+    if (plainOrder.orderStatus === ALL_STATUS_ID.WAITING_APPROVE) {
+      const updateOrderStatus = allStatus
+        .filter(status => [ALL_STATUS_ID.APPROVED, ALL_STATUS_ID.PENDING_REVIEW].includes(status.id))
+        .map(status => ({ id: status.id, status: status.id === ALL_STATUS_ID.APPROVED ? 'Aprovar' : 'Pedir Revisão' }))
+      applicableStatus = (updateOrderStatus)
+    }
     return {
       ...plainOrder,
       status,
+      applicableStatus
     }
   })
   return formattedOrders

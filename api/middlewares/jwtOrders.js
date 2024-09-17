@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 
-export default async function jwyOrders (req, res, next) {
+export default async function jwtOrders (req, res, next) {
   const { authorization } = req.headers 
   if (!authorization ) return res.status(401).json({ error: 'Missing Authorization' })
 

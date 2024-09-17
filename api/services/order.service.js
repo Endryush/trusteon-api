@@ -1,5 +1,6 @@
 import { ALL_STATUS_ID } from "../enums/status.enum.js";
 import orderRepository from "../repositories/order.repository.js";
+import walletService from "./wallet.service.js";
 
 const ENABLED_STATUS = [
   ALL_STATUS_ID.OPEN,
@@ -42,6 +43,11 @@ async function updateOrderStatus (order) {
     id: order.orderId,
     status: order.status
   }
+
+  const currentOrder = await orderRepository.getOrderById(order.orderId)
+  if (currentOrder.orderStatus === order.status) throw new Error('Nothing to update')
+
+  if (order.status === ALL_STATUS_ID.APPROVED)  await walletService.saveWallet(order.orderId)
 
   return await orderRepository.updateOrderStatus(orderFormatted)
 }

@@ -36,6 +36,14 @@ async function getUserOrders (id) {
   }
 }
 
+async function getOrderById (id) {
+  try {
+    return await Order.findByPk(id)
+  } catch (error) {
+    throw error
+  }
+}
+
 async function updateOrderStatus (order) {
   try {
     return await Order.update( { orderStatus: order.status }, 
@@ -90,5 +98,6 @@ export default {
   getUserOrders,
   updateOrderStatus,
   getOrderByAuthors,
-  getAllStatusOrder
+  getAllStatusOrder,
+  getOrderById
 }

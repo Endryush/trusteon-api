@@ -24,9 +24,13 @@ const User = db.define('users', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  reputation: {
-    type: DataTypes.DECIMAL(5, 2),
-    defaultValue: 0
+  userReputation: {
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0.00
+  },
+  authorReputation: {
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0.00
   }
 }, { timestamps: true, underscored: true })
 

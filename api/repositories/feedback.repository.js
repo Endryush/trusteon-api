@@ -6,6 +6,13 @@ import Ratings from "../models/rating.model.js"
 
 async function createAuthorFeedback (feedback, userId) {
   try {
+    const orderId = feedback[0].orderId
+    const feedbackOrder = await AuthorFeedback.findOne(
+      { where: { orderId } }
+    ) 
+
+    if (feedbackOrder) throw new Error('Serviço já avaliado')
+
     await AuthorFeedback.bulkCreate(feedback)
     return await AuthorFeedback.findAll({
       where: { userId }
@@ -17,6 +24,12 @@ async function createAuthorFeedback (feedback, userId) {
 
 async function createClientFeedback (feedback, userId) {
   try {
+    const orderId = feedback[0].orderId
+    const feedbackOrder = await ClientFeedback.findOne(
+      { where: { orderId } }
+    ) 
+
+    if (feedbackOrder.length > 0) throw new Error('Serviço já avaliado')
     await ClientFeedback.bulkCreate(feedback)
     return await ClientFeedback.findAll({
       where: { userId }

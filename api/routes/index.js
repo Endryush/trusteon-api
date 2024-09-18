@@ -4,6 +4,7 @@ import userRouter from './user.route.js'
 import productRouter from './product.route.js'
 import orderRouter from './order.route.js'
 import walletRouter from './wallet.route.js'
+import feedbackRouter from './feedback.route.js'
 
 const router = express.Router();
 
@@ -13,5 +14,6 @@ router
   .use('/product', productRouter)
   .use('/order', orderRouter)
   .use('/wallet', walletRouter)
+  .use('/feedback', feedbackRouter)
 
 export default router

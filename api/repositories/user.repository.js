@@ -30,8 +30,20 @@ async function getUserById (id) {
   }
 }
 
+async function updateReputation (id, reputation, isUser = false) {
+  try {
+    const field = isUser ? 'authorReputation' : 'userReputation' 
+    return await User.update({ [field]: reputation },  {
+      where: { id },
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
 export default {
   registerUser,
   getUserByEmail,
-  getUserById
+  getUserById,
+  updateReputation
 }

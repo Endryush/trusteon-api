@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
 
-const Rating = db.define('ratings', {
+const Ratings = db.define('ratings', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -19,4 +19,4 @@ const Rating = db.define('ratings', {
 }, { timestamps: true, underscored: true });
 
 
-export default Rating;
+export default Ratings;

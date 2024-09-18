@@ -8,11 +8,11 @@ module.exports = {
       allowNull: false,
       defaultValue: 0.00
     })
-    await queryInterface.renameColumn('users', 'reputation', 'userReputation')
+    await queryInterface.renameColumn('users', 'reputation', 'user_reputation')
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.removeColumn('users', 'author_reputation')
-    await queryInterface.renameColumn('users', 'userReputation', 'reputation')
+    await queryInterface.renameColumn('users', 'user_reputation', 'reputation')
   }
 };

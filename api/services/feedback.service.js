@@ -3,25 +3,28 @@ import BadRequestException from "../exceptions/BadRequestException.js"
 import feedbackRepository from "../repositories/feedback.repository.js";
 import orderRepository from "../repositories/order.repository.js";
 import { ALL_STATUS_ID } from "../enums/status.enum.js";
+import userRepository from "../repositories/user.repository.js";
 
 async function createFeedback(feedback) {
   const order = await getValidOrder(feedback.orderId)
-
-  if (order.userId === feedback.userId) return await feedbackRepository.createAuthorFeedback(feedback)
+  const isUser = order.userId === feedback.userId
+  const feedbackResponse = isUser ?
+    await feedbackRepository.createAuthorFeedback(feedback.questions, feedback.userId):
+    await feedbackRepository.createClientFeedback(feedback.questions, feedback.userId)
   
-  if (order.authorId === feedback.userId) return await feedbackRepository.createClientFeedback(feedback)
-
-  throw new BadRequestException('User not found in order')
+  const avgReputation = (feedbackResponse.reduce((acc, feedback) => acc + feedback.rating, 0)) / feedbackResponse.length
+  return await userRepository.updateReputation(feedback.userId, avgReputation, isUser)
 }
 
 async function getQuestions(userId, orderId) {
   const order = await getValidOrder(orderId)
-  // throw new Error(`${order.userId} ${orderId}`)
-  if (userId === order.userId) return await feedbackRepository.getAuthorQuestions()
-
-  if(userId === order.authorId) return await feedbackRepository.getClientQuestions()
+  const ratings = await feedbackRepository.getRatings()
+  const questions = userId === order.userId ? await feedbackRepository.getAuthorQuestions() : await feedbackRepository.getClientQuestions()
   
-  throw new BadRequestException('User not found in order')
+  return {
+    questions,
+    ratings
+  }
 }
 
 async function getValidOrder (orderId) {

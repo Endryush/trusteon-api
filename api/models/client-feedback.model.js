@@ -2,8 +2,9 @@ import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
 import User from './user.model.js';
 import ClientQuestions from './client-questions.model.js';
+import Order from './order.model.js';
 
-const ClientFeedback = db.define('user_feedbacks', {
+const ClientFeedback = db.define('client_feedbacks', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -26,6 +27,14 @@ const ClientFeedback = db.define('user_feedbacks', {
     },
     allowNull: false
   },
+  orderId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Order,
+      key: 'id'
+    },
+    allowNull: false
+  },
   rating: {
     type: DataTypes.INTEGER,
     allowNull: false
@@ -33,6 +42,7 @@ const ClientFeedback = db.define('user_feedbacks', {
 }, { timestamps: true, underscored: true });
 
 ClientFeedback.belongsTo(User, { foreignKey: 'userId' });
+ClientFeedback.belongsTo(Order, { foreignKey: 'orderId' });
 ClientFeedback.belongsTo(ClientQuestions, { foreignKey: 'questionId' });
 
 export default ClientFeedback;

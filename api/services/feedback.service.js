@@ -8,12 +8,19 @@ import userRepository from "../repositories/user.repository.js";
 async function createFeedback(feedback) {
   const order = await getValidOrder(feedback.orderId)
   const isUser = order.userId === feedback.userId
+  const idToUpdate = isUser ? order.authorId : order.userId
+  const formattedQuestions = feedback.questions.map((question) => {
+    return {
+      ...question,
+      userId: idToUpdate
+    }
+  })
   const feedbackResponse = isUser ?
-    await feedbackRepository.createAuthorFeedback(feedback.questions, feedback.userId):
-    await feedbackRepository.createClientFeedback(feedback.questions, feedback.userId)
+    await feedbackRepository.createAuthorFeedback(formattedQuestions, idToUpdate):
+    await feedbackRepository.createClientFeedback(formattedQuestions,idToUpdate)
   
   const avgReputation = (feedbackResponse.reduce((acc, feedback) => acc + feedback.rating, 0)) / feedbackResponse.length
-  return await userRepository.updateReputation(feedback.userId, avgReputation, isUser)
+  return await userRepository.updateReputation(idToUpdate, avgReputation, isUser)
 }
 
 async function getQuestions(userId, orderId) {

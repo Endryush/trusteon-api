@@ -81,9 +81,6 @@ function getApplicableStatus (status) {
     case (ALL_STATUS_ID.IN_PROGRESS):
       applicableStatus.push(ALL_STATUS_ID.OPEN, ALL_STATUS_ID.WAITING_APPROVE)
       break
-    case (ALL_STATUS_ID.PENDING_REVIEW):
-      applicableStatus.push(ALL_STATUS_ID.APPROVED, ALL_STATUS_ID.WAITING_APPROVE)
-      break
   }
   return applicableStatus
 }

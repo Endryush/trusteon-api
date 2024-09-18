@@ -29,7 +29,7 @@ async function createClientFeedback (feedback, userId) {
       { where: { orderId } }
     ) 
 
-    if (feedbackOrder.length > 0) throw new Error('Serviço já avaliado')
+    if (feedbackOrder) throw new Error('Serviço já avaliado')
     await ClientFeedback.bulkCreate(feedback)
     return await ClientFeedback.findAll({
       where: { userId }

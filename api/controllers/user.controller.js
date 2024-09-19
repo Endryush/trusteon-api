@@ -42,8 +42,20 @@ async function getUserMe (req, res, next) {
   }
 }
 
+async function updateUser (req, res, next) {
+  try {
+    const user = await userService.updateUser(req.body)
+    res.header('Authorization', `Bearer ${user.token}`)
+    res.send(user.formattedUser)
+    logger.info('PATCH IN updateUser')
+  } catch (error) {
+    next(error)
+  }
+}
+
 export default {
   registerUser,
   login,
-  getUserMe
+  getUserMe,
+  updateUser
 }

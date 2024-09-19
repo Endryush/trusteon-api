@@ -41,9 +41,22 @@ async function updateReputation (id, reputation, isUser = false) {
   }
 }
 
+async function updateUser (user) {
+  try {
+    await User.update(user, {
+      where: { id: user.userId }
+    })
+
+    return await getUserById(user.userId)
+  } catch (error) {
+    throw error
+  }
+}
+
 export default {
   registerUser,
   getUserByEmail,
   getUserById,
-  updateReputation
+  updateReputation,
+  updateUser
 }

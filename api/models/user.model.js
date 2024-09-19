@@ -12,7 +12,7 @@ const User = db.define('users', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  user_image: {
+  userImage: {
     type: DataTypes.STRING
   },
   email: {

@@ -33,16 +33,7 @@ async function login (email, password) {
 
   const token = generateToken(user)
 
-  return {
-    formattedUser: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      user_image: user.user_image,
-      reputation: user.reputation
-    },
-    token
-  }
+  return normalizeUser(user, token)
     
 }
 
@@ -56,9 +47,34 @@ async function getUserMe (token) {
   return user
 }
 
+async function updateUser (user) {
+  if (user.email !== user.newEmail) {
+    user.email = user.newEmail
+  }
+  const userUpdated = await userRepository.updateUser(user)
+  const token = generateToken(userUpdated)
+
+  return normalizeUser(userUpdated, token)
+}
+
+function normalizeUser (user, token) {
+  return {
+    formattedUser: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      userImage: user.userImage,
+      userReputation: user.userReputation,
+      authorReputation: user.authorReputation
+    },
+    token
+  }
+}
+
 export default {
   registerUser,
   login,
-  getUserMe
+  getUserMe,
+  updateUser
 }
 

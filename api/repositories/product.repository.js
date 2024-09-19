@@ -1,5 +1,4 @@
 import Product from "../models/product.model.js";
-import ServiceStatus from "../models/service-status.model.js";
 import User from "../models/user.model.js";
 
 async function createProduct (product) {
@@ -17,7 +16,7 @@ async function getProducts () {
         {
           model: User,
           as: 'user',
-          attributes: [['name', 'author']]
+          attributes: [['name', 'author'], ['author_reputation', 'reputation'], 'userImage' ]
         }
       ],
       attributes: { exclude: ['createdAt', 'updatedAt', 'description', 'categories', 'authorId' ] }
@@ -39,7 +38,7 @@ async function getProductById (id) {
         {
           model: User,
           as: 'user',
-          attributes: [['name', 'author']]
+          attributes: [['name', 'author'], ['author_reputation', 'reputation'], 'userImage' ]
         }
       ],
     })

@@ -1,15 +1,15 @@
 import express from 'express';
 import productController from '../controllers/product.controller.js';
-import jwtUserAuth from '../middlewares/jwtUserAuth.js';
+import jwtAuth from '../middlewares/jwtAuth.js';
 
 
 const router = express.Router()
 
 router
-  .post('/add', jwtUserAuth ,productController.createProduct)
+  .post('/add', jwtAuth, productController.createProduct)
   .get('/', productController.getProducts)
   .get('/:id', productController.getProductById)
-  .patch('/edit', jwtUserAuth, productController.updateProduct)
-  .delete('/:id', jwtUserAuth, productController.deleteProduct)
+  .patch('/edit', jwtAuth, productController.updateProduct)
+  .delete('/:id', jwtAuth, productController.deleteProduct)
 
 export default router

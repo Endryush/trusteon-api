@@ -6,7 +6,7 @@ async function createOrder (req, res, next) {
   try {
     const order = req.body
     validateOrder(order)
-    await orderService.createOrder(order)
+    await orderService.createOrder(order, req.user.id)
 
     res.status(201).send()
     logger.info('POST IN createOrder')
@@ -17,9 +17,7 @@ async function createOrder (req, res, next) {
 
 async function getUserOrders (req, res, next) {
   try {
-    const { userId } = req.query
-
-    res.send(await orderService.getUserOrders(userId))
+    res.send(await orderService.getUserOrders(req.user.id))
     logger.info('GET IN getUserOrders')
   } catch (error) {
     next(error)
@@ -31,7 +29,7 @@ async function updateOrderStatus (req, res, next) {
     const order = req.body
 
     if (!order.orderId || !order.status) throw new BadRequestException('Invalid order')
-    await orderService.updateOrderStatus(order)
+    await orderService.updateOrderStatus(order, req.user.id)
     res.status(204).send()
     logger.info('PATCH IN updateOrderStatus')
   } catch (error) {
@@ -41,9 +39,7 @@ async function updateOrderStatus (req, res, next) {
 
 async function getOrderByAuthors (req, res, next) {
   try {
-    const { userId } = req.query
-    if (!userId) throw new BadRequestException('Informe um autor válido')
-    res.send(await orderService.getOrderByAuthors(userId))
+    res.send(await orderService.getOrderByAuthors(req.user.id))
     logger.info('GET IN getOrderByAuthors')
   } catch (error) {
     next(error)

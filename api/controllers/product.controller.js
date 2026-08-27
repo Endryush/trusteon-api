@@ -1,13 +1,12 @@
 import productService from "../services/product.service.js";
 import { validateProduct } from "../helpers/validateProduct.js";
-import NotFoundException from '../exceptions/NotFoundException.js';
 import BadRequestException from "../exceptions/BadRequestException.js";
 
 async function createProduct (req, res, next) {
   try {
     const product = req.body
     validateProduct(product)
-    await productService.createProduct(product)
+    await productService.createProduct(product, req.user.id)
 
     res.status(201).send()
     logger.info('POST IN createProduct')
@@ -31,8 +30,6 @@ async function getProductById (req, res, next) {
     const { id } = req.params
     const product = await productService.getProductById(id)
 
-    if(!product) throw new NotFoundException('Product not found')
-
     res.send(product)
     logger.info('GET IN getProductById')
   } catch (error) {
@@ -45,7 +42,7 @@ async function updateProduct (req, res, next) {
     const product = req.body
     validateProduct(product)
 
-    const updatedProduct = await productService.updateProduct(product)
+    const updatedProduct = await productService.updateProduct(product, req.user.id)
     res.send(updatedProduct)
     logger.info('PUT IN updateProduct')
   } catch (error) {
@@ -56,9 +53,9 @@ async function updateProduct (req, res, next) {
 async function deleteProduct (req, res, next) {
   try {
     const { id } = req.params
-    if (!id) return new BadRequestException('Product ID is required')
+    if (!id) throw new BadRequestException('Product ID is required')
 
-    await productService.deleteProduct(id)
+    await productService.deleteProduct(id, req.user.id)
     res.status(204).send()
     logger.warn(`Deleted product ${id}`)
 

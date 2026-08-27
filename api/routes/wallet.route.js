@@ -1,11 +1,11 @@
 import express from 'express';
-import jwtUserAuth from '../middlewares/jwtUserAuth.js';
+import jwtAuth from '../middlewares/jwtAuth.js';
 import walletController from '../controllers/wallet.controller.js';
 
 
 const router = express.Router()
 
 router
-  .get('/', jwtUserAuth , walletController.getUserWallet)
+  .get('/', jwtAuth, walletController.getUserWallet)
 
 export default router

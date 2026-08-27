@@ -1,9 +1,13 @@
 import productRepository from "../repositories/product.repository.js";
 import { formatBeforeUpdateProduct } from "../utils/productUpdate.js";
+import NotFoundException from "../exceptions/NotFoundException.js";
+import ForbiddenException from "../exceptions/ForbiddenException.js";
 
-
-async function createProduct (product) {
-  return await productRepository.createProduct(product)
+async function createProduct (product, requesterId) {
+  return await productRepository.createProduct({
+    ...product,
+    authorId: requesterId
+  })
 }
 
 async function getProducts (authorId) {
@@ -23,16 +27,28 @@ async function getProducts (authorId) {
 
 async function getProductById(id) {
   const service = await productRepository.getProductById(id)
+  if (!service) throw new NotFoundException('Product not found')
   service.productImages = parseProductImages(service.productImages)
   return service
 }
 
-async function updateProduct (product) {
+async function assertProductOwner (productId, requesterId) {
+  const product = await productRepository.getProductById(productId)
+  if (!product) throw new NotFoundException('Product not found')
+  if (Number(product.authorId) !== Number(requesterId)) {
+    throw new ForbiddenException('You cannot modify this product')
+  }
+  return product
+}
+
+async function updateProduct (product, requesterId) {
+  await assertProductOwner(product.id, requesterId)
   const formattedProduct = formatBeforeUpdateProduct(product)
   return await productRepository.updateProduct(formattedProduct)
 }
 
-async function deleteProduct (id) {
+async function deleteProduct (id, requesterId) {
+  await assertProductOwner(id, requesterId)
   return await productRepository.deleteProduct(id)
 }
 

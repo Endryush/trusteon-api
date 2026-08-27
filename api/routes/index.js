@@ -11,7 +11,7 @@ const router = express.Router();
 router
   .use('/health-check', healthCheckRouter)
   .use('/user', userRouter)
-  .use('/product', productRouter)
+  .use('/products', productRouter)
   .use('/order', orderRouter)
   .use('/wallet', walletRouter)
   .use('/feedback', feedbackRouter)

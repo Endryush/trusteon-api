@@ -41,13 +41,14 @@ async function updateReputation (id, reputation, isUser = false) {
   }
 }
 
-async function updateUser (user) {
+async function updateUser (userId, fields) {
   try {
-    await User.update(user, {
-      where: { id: user.userId }
+    await User.update(fields, {
+      where: { id: userId },
+      fields: ['name', 'email', 'userImage']
     })
 
-    return await getUserById(user.userId)
+    return await getUserById(userId)
   } catch (error) {
     throw error
   }

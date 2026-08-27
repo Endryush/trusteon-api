@@ -17,5 +17,13 @@ export default function exceptions (error, req, res, next) {
     return res.status(status).json({ error: message });
   }
 
-  res.status(500).send({ error: error.message ?? error })
+  if (error.name === 'SequelizeUniqueConstraintError') {
+    return res.status(409).json({ error: 'Resource already exists' })
+  }
+
+  if (error.name === 'SequelizeValidationError') {
+    return res.status(400).json({ error: 'Invalid data' })
+  }
+
+  res.status(500).json({ error: 'Internal server error' })
 }

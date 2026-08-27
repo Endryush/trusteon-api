@@ -2,6 +2,7 @@ import userRepository from "../repositories/user.repository.js";
 import AlreadyExistException from '../exceptions/AlreadyExistException.js';
 import NotFoundException from '../exceptions/NotFoundException.js';
 import UnauthorizedException from '../exceptions/UnauthorizedException.js';
+import BadRequestException from '../exceptions/BadRequestException.js';
 import  { hashPassword, comparePassword, generateToken } from '../utils/bcrypt.js';
 
 async function registerUser (user) {
@@ -47,13 +48,16 @@ async function getUserMe (userId) {
 }
 
 async function updateUser (user, requesterId) {
-  if (user.newEmail) {
-    user.email = user.newEmail
+  const fields = {}
+  if (user.name !== undefined) fields.name = user.name
+  if (user.userImage !== undefined) fields.userImage = user.userImage
+  if (user.newEmail) fields.email = user.newEmail
+
+  if (Object.keys(fields).length === 0) {
+    throw new BadRequestException('Nothing to update')
   }
-  const userUpdated = await userRepository.updateUser({
-    ...user,
-    userId: requesterId
-  })
+
+  const userUpdated = await userRepository.updateUser(requesterId, fields)
   const token = generateToken(userUpdated)
 
   return normalizeUser(userUpdated, token)

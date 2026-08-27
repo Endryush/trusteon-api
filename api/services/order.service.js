@@ -1,4 +1,8 @@
-import { ALL_STATUS_ID } from "../enums/status.enum.js";
+import {
+  ALL_STATUS_ID,
+  AUTHOR_STATUS_TRANSITIONS,
+  BUYER_STATUS_TRANSITIONS,
+} from "../enums/status.enum.js";
 import BadRequestException from "../exceptions/BadRequestException.js";
 import ForbiddenException from "../exceptions/ForbiddenException.js";
 import NotFoundException from "../exceptions/NotFoundException.js";
@@ -56,9 +60,7 @@ async function updateOrderStatus (order, requesterId) {
 
   const currentOrder = await orderRepository.getOrderById(order.orderId)
   if (!currentOrder) throw new NotFoundException('Order not found')
-  assertOrderParticipant(currentOrder, requesterId)
-
-  if (currentOrder.orderStatus === order.status) throw new Error('Nothing to update')
+  assertAllowedStatusTransition(currentOrder, requesterId, order.status)
 
   if (order.status === ALL_STATUS_ID.APPROVED)  await walletService.saveWallet(order.orderId)
 
@@ -82,28 +84,30 @@ async function getAllStatusOrder () {
   return finalStatus
 }
 
-function assertOrderParticipant (order, requesterId) {
-  const isParticipant = Number(order.userId) === Number(requesterId)
-    || Number(order.authorId) === Number(requesterId)
-  if (!isParticipant) {
+function assertAllowedStatusTransition (order, requesterId, nextStatus) {
+  const isBuyer = Number(order.userId) === Number(requesterId)
+  const isAuthor = Number(order.authorId) === Number(requesterId)
+
+  if (!isBuyer && !isAuthor) {
     throw new ForbiddenException('You cannot access this order')
+  }
+
+  if (Number(order.orderStatus) === Number(nextStatus)) {
+    throw new BadRequestException('Nothing to update')
+  }
+
+  const currentStatus = Number(order.orderStatus)
+  const allowed = isAuthor
+    ? AUTHOR_STATUS_TRANSITIONS[currentStatus] ?? []
+    : BUYER_STATUS_TRANSITIONS[currentStatus] ?? []
+
+  if (!allowed.includes(Number(nextStatus))) {
+    throw new ForbiddenException('You cannot update this order to this status')
   }
 }
 
 function getApplicableStatus (status) {
-  const applicableStatus = []
-  switch (status) {
-    case(ALL_STATUS_ID.OPEN):
-      applicableStatus.push(ALL_STATUS_ID.IN_PROGRESS, ALL_STATUS_ID.WAIT_LIST)
-      break
-    case (ALL_STATUS_ID.WAIT_LIST):
-      applicableStatus.push(ALL_STATUS_ID.OPEN, ALL_STATUS_ID.IN_PROGRESS)
-      break
-    case (ALL_STATUS_ID.IN_PROGRESS):
-      applicableStatus.push(ALL_STATUS_ID.OPEN, ALL_STATUS_ID.WAITING_APPROVE)
-      break
-  }
-  return applicableStatus
+  return AUTHOR_STATUS_TRANSITIONS[status] ?? []
 }
 
 export default {

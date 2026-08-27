@@ -2,7 +2,7 @@ import userRepository from "../repositories/user.repository.js";
 import AlreadyExistException from '../exceptions/AlreadyExistException.js';
 import NotFoundException from '../exceptions/NotFoundException.js';
 import UnauthorizedException from '../exceptions/UnauthorizedException.js';
-import  { hashPassword, comparePassword, generateToken, decodeToken } from '../utils/bcrypt.js';
+import  { hashPassword, comparePassword, generateToken } from '../utils/bcrypt.js';
 
 async function registerUser (user) {
   const alreadyIsUser = await userRepository.getUserByEmail(user.email);
@@ -37,9 +37,8 @@ async function login (email, password) {
     
 }
 
-async function getUserMe (token) {
-  const decodedToken = decodeToken(token)
-  const user = await userRepository.getUserById(decodedToken.id)
+async function getUserMe (userId) {
+  const user = await userRepository.getUserById(userId)
   if (!user){
     throw new NotFoundException('User not found')
   }
@@ -47,11 +46,14 @@ async function getUserMe (token) {
   return user
 }
 
-async function updateUser (user) {
-  if (user.email !== user.newEmail) {
+async function updateUser (user, requesterId) {
+  if (user.newEmail) {
     user.email = user.newEmail
   }
-  const userUpdated = await userRepository.updateUser(user)
+  const userUpdated = await userRepository.updateUser({
+    ...user,
+    userId: requesterId
+  })
   const token = generateToken(userUpdated)
 
   return normalizeUser(userUpdated, token)

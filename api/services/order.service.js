@@ -1,4 +1,7 @@
 import { ALL_STATUS_ID } from "../enums/status.enum.js";
+import BadRequestException from "../exceptions/BadRequestException.js";
+import ForbiddenException from "../exceptions/ForbiddenException.js";
+import NotFoundException from "../exceptions/NotFoundException.js";
 import orderRepository from "../repositories/order.repository.js";
 import walletService from "./wallet.service.js";
 
@@ -11,8 +14,15 @@ const ENABLED_STATUS = [
   ALL_STATUS_ID.IN_PROGRESS,
 ]
 
-async function createOrder(order) {
-  return await orderRepository.createOrder(order)
+async function createOrder(order, requesterId) {
+  if (Number(order.authorId) === Number(requesterId)) {
+    throw new BadRequestException('userId and authorId must be different')
+  }
+
+  return await orderRepository.createOrder({
+    ...order,
+    userId: requesterId
+  })
 }
 
 async function getUserOrders (id) {
@@ -38,13 +48,16 @@ async function getUserOrders (id) {
   return formattedOrders
 }
 
-async function updateOrderStatus (order) {
+async function updateOrderStatus (order, requesterId) {
   const orderFormatted = {
     id: order.orderId,
     status: order.status
   }
 
   const currentOrder = await orderRepository.getOrderById(order.orderId)
+  if (!currentOrder) throw new NotFoundException('Order not found')
+  assertOrderParticipant(currentOrder, requesterId)
+
   if (currentOrder.orderStatus === order.status) throw new Error('Nothing to update')
 
   if (order.status === ALL_STATUS_ID.APPROVED)  await walletService.saveWallet(order.orderId)
@@ -67,6 +80,14 @@ async function getAllStatusOrder () {
     }
   })
   return finalStatus
+}
+
+function assertOrderParticipant (order, requesterId) {
+  const isParticipant = Number(order.userId) === Number(requesterId)
+    || Number(order.authorId) === Number(requesterId)
+  if (!isParticipant) {
+    throw new ForbiddenException('You cannot access this order')
+  }
 }
 
 function getApplicableStatus (status) {

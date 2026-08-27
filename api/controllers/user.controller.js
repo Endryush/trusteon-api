@@ -1,6 +1,5 @@
 import userService from "../services/user.service.js"
 import { validateUser } from "../helpers/validateUserRequest.js";
-import UnauthorizedException from "../exceptions/UnauthorizedException.js";
 
 async function registerUser (req, res, next) {
   try {
@@ -30,13 +29,7 @@ async function login (req, res, next) {
 
 async function getUserMe (req, res, next) {
   try {
-    const { authorization  } = req.headers
-
-    if (!authorization ) throw new UnauthorizedException('Missing Authorization')
-
-    const token = authorization .split(' ')[1]
-    res.header('Authorization', `Bearer ${token}`)
-    res.send(await userService.getUserMe(token))
+    res.send(await userService.getUserMe(req.user.id))
   } catch (error) {
     next(error)
   }
@@ -44,7 +37,7 @@ async function getUserMe (req, res, next) {
 
 async function updateUser (req, res, next) {
   try {
-    const user = await userService.updateUser(req.body)
+    const user = await userService.updateUser(req.body, req.user.id)
     res.header('Authorization', `Bearer ${user.token}`)
     res.send(user.formattedUser)
     logger.info('PATCH IN updateUser')

@@ -5,6 +5,7 @@ const exceptionHandlers = {
   BadRequestException: (error) => ({ status: error.statusCode, message: error.message }),
   AlreadyExistException: (error) => ({ status: error.statusCode, message: error.message }),
   UnauthorizedException: (error) => ({ status: error.statusCode, message: error.message }),
+  ForbiddenException: (error) => ({ status: error.statusCode, message: error.message }),
 }
 
 export default function exceptions (error, req, res, next) {

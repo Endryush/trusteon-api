@@ -1,4 +1,5 @@
 import walletService from "../services/wallet.service.js"
+import logger from "../logger.js"
 
 async function getUserWallet (req, res, next) {
   try {

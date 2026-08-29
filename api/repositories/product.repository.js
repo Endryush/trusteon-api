@@ -1,82 +1,63 @@
 import Product from "../models/product.model.js";
 import User from "../models/user.model.js";
 
-async function createProduct (product) {
-  try {
-    return await Product.create(product)
-  } catch (error) {
-    throw error 
-  }
+const authorInclude = {
+  model: User,
+  as: 'user',
+  attributes: [['name', 'author'], ['author_reputation', 'reputation'], 'userImage']
 }
 
-async function getProducts () {
-  try {
-    const results = await Product.findAndCountAll({
-      include: [
-        {
-          model: User,
-          as: 'user',
-          attributes: [['name', 'author'], ['author_reputation', 'reputation'], 'userImage' ]
-        }
-      ],
-      attributes: { exclude: ['createdAt', 'updatedAt', 'description', 'categories', 'authorId' ] }
-    })
+async function createProduct (product) {
+  return await Product.create(product)
+}
 
-    return {
-      services: results.rows,
-      count: results.count
-    }
-  } catch (error) {
-    throw error 
+async function getProducts ({ limit, offset } = {}) {
+  const results = await Product.findAndCountAll({
+    include: [authorInclude],
+    attributes: { exclude: ['createdAt', 'updatedAt', 'description', 'categories', 'authorId'] },
+    limit,
+    offset,
+    distinct: true
+  })
+
+  return {
+    services: results.rows,
+    count: results.count
   }
 }
 
 async function getProductById (id) {
-  try {
-    return await Product.findByPk(id, {
-      include: [
-        {
-          model: User,
-          as: 'user',
-          attributes: [['name', 'author'], ['author_reputation', 'reputation'], 'userImage' ]
-        }
-      ],
-    })
-  } catch (error) {
-    throw error 
-  }
+  return await Product.findByPk(id, {
+    include: [authorInclude],
+  })
 }
 
 async function updateProduct (product) {
-  try {
-    await Product.update(product, {
-      where: { id: product.id }
-    })
+  await Product.update(product, {
+    where: { id: product.id }
+  })
 
-    return await getProductById(product.id)
-  } catch (error) {
-    throw error
-  }
+  return await getProductById(product.id)
 }
-
 
 async function deleteProduct (id) {
-  try {
-    return await Product.destroy({
-      where: { id }
-    })
-  } catch (error) {
-    throw error
-  }
+  return await Product.destroy({
+    where: { id }
+  })
 }
 
-async function getProductByAuthor (authorId) {
-  try {
-    return await Product.findAll({
-      where: { authorId },
-    })
-  } catch (error) {
-    
+async function getProductByAuthor (authorId, { limit, offset } = {}) {
+  const results = await Product.findAndCountAll({
+    where: { authorId },
+    include: [authorInclude],
+    limit,
+    offset,
+    distinct: true
+  })
+
+  return {
+    services: results.rows,
+    count: results.count
   }
 }
 

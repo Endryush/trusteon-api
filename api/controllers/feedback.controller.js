@@ -1,16 +1,9 @@
-import BadRequestException from "../exceptions/BadRequestException.js"
-import { validateFeedback } from "../helpers/validateFeedback.js"
 import feedbackService from "../services/feedback.service.js"
-
+import logger from "../logger.js"
 
 async function createFeedback (req, res, next) {
   try {
-    const feedback = req.body
-    validateFeedback(feedback)
-    if (!feedback.questions || feedback.questions.length === 0) throw new BadRequestException('Feedback must have at least one question')
-
-
-    res.status(201).send(await feedbackService.createFeedback(feedback, req.user.id))
+    res.status(201).send(await feedbackService.createFeedback(req.body, req.user.id))
     logger.info('POST IN createFeedback')
   } catch (error) {
     next(error)
@@ -19,12 +12,10 @@ async function createFeedback (req, res, next) {
 
 async function getQuestions(req, res, next) {
   try {
-    const { orderId } = req.query
-    validateFeedback(req.query)
-    const questions = await feedbackService.getQuestions(req.user.id, parseInt(orderId))
+    const questions = await feedbackService.getQuestions(req.user.id, req.query.orderId)
 
     res.send(questions)
-    logger.info('POST IN getQuestions')
+    logger.info('GET IN getQuestions')
   } catch (error) {
     next(error)
   }

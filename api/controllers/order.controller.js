@@ -1,12 +1,9 @@
-import BadRequestException from "../exceptions/BadRequestException.js"
-import { validateOrder } from "../helpers/validateOrder.js"
 import orderService from "../services/order.service.js"
+import logger from "../logger.js"
 
 async function createOrder (req, res, next) {
   try {
-    const order = req.body
-    validateOrder(order)
-    await orderService.createOrder(order, req.user.id)
+    await orderService.createOrder(req.body, req.user.id)
 
     res.status(201).send()
     logger.info('POST IN createOrder')
@@ -26,10 +23,7 @@ async function getUserOrders (req, res, next) {
 
 async function updateOrderStatus (req, res, next) {
   try {
-    const order = req.body
-
-    if (!order.orderId || !order.status) throw new BadRequestException('Invalid order')
-    await orderService.updateOrderStatus(order, req.user.id)
+    await orderService.updateOrderStatus(req.body, req.user.id)
     res.status(204).send()
     logger.info('PATCH IN updateOrderStatus')
   } catch (error) {

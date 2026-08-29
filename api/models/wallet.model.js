@@ -16,7 +16,8 @@ const Wallet = db.define('wallet', {
       model: Order,
       key: 'id'
     },
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   authorId: {
     type: DataTypes.INTEGER,
@@ -27,7 +28,7 @@ const Wallet = db.define('wallet', {
     allowNull: false
   },
   totalAmount: {
-    type: DataTypes.DOUBLE,
+    type: DataTypes.DECIMAL(10, 2),
     allowNull: false
   },
 }, { timestamps: true, underscored: true, tableName: 'wallet' })

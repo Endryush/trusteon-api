@@ -12,7 +12,12 @@ async function registerUser (user) {
   }
     
   const hashedPassword = await hashPassword(user.password)
-  const userCreated = await userRepository.registerUser({ ...user, password: hashedPassword })
+  const userCreated = await userRepository.registerUser({
+    name: user.name,
+    email: user.email,
+    password: hashedPassword,
+    userImage: user.userImage
+  })
   const token = generateToken(userCreated)
   const newUser = await userRepository.getUserById(userCreated.id)
   return {

@@ -27,7 +27,7 @@ const Product = db.define('products', {
     allowNull: true
   },
   totalAmount: {
-    type: DataTypes.DOUBLE,
+    type: DataTypes.DECIMAL(10, 2),
     allowNull: false
   },
   authorId: {

@@ -8,6 +8,7 @@ import ForbiddenException from "../exceptions/ForbiddenException.js";
 import NotFoundException from "../exceptions/NotFoundException.js";
 import orderRepository from "../repositories/order.repository.js";
 import walletService from "./wallet.service.js";
+import db from "../config/db.js";
 
 const ENABLED_STATUS = [
   ALL_STATUS_ID.OPEN,
@@ -24,7 +25,10 @@ async function createOrder(order, requesterId) {
   }
 
   return await orderRepository.createOrder({
-    ...order,
+    totalAmount: order.totalAmount,
+    authorId: order.authorId,
+    serviceId: order.serviceId,
+    orderStatus: order.orderStatus,
     userId: requesterId
   })
 }
@@ -58,13 +62,20 @@ async function updateOrderStatus (order, requesterId) {
     status: order.status
   }
 
-  const currentOrder = await orderRepository.getOrderById(order.orderId)
-  if (!currentOrder) throw new NotFoundException('Order not found')
-  assertAllowedStatusTransition(currentOrder, requesterId, order.status)
+  return await db.transaction(async (transaction) => {
+    const currentOrder = await orderRepository.getOrderById(order.orderId, {
+      transaction,
+      lock: transaction.LOCK.UPDATE
+    })
+    if (!currentOrder) throw new NotFoundException('Order not found')
+    assertAllowedStatusTransition(currentOrder, requesterId, order.status)
 
-  if (order.status === ALL_STATUS_ID.APPROVED)  await walletService.saveWallet(order.orderId)
+    if (Number(order.status) === ALL_STATUS_ID.APPROVED) {
+      await walletService.saveWallet(order.orderId, { transaction })
+    }
 
-  return await orderRepository.updateOrderStatus(orderFormatted)
+    return await orderRepository.updateOrderStatus(orderFormatted, { transaction })
+  })
 }
 
 async function getOrderByAuthors (id) {

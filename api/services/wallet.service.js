@@ -1,39 +1,41 @@
 import comissionedRepository from "../repositories/comissioned.repository.js";
 import orderRepository from "../repositories/order.repository.js";
 import walletRepository from "../repositories/wallet.repository.js";
+import { getCommissionRate, splitCommission } from "../utils/money.js";
 
-async function saveWallet (orderId) {
-  const order = await orderRepository.getOrderById(orderId)
-  const comissionedValue = order.totalAmount * 0.15
-  const totalAmount = order.totalAmount - comissionedValue
+async function saveWallet (orderId, options = {}) {
+  const existing = await walletRepository.findByOrderId(orderId, options)
+  if (existing) return existing
 
-  const walletParams = {
+  const order = await orderRepository.getOrderById(orderId, options)
+  const rate = getCommissionRate()
+  const { commission, authorAmount } = splitCommission(order.totalAmount, rate)
+
+  await walletRepository.saveUserWallet({
     orderId,
     authorId: order.authorId,
-    totalAmount
-  }
+    totalAmount: authorAmount
+  }, options)
 
-  await walletRepository.saveUserWallet(walletParams)
-
-  const comissionedParams = {
+  await comissionedRepository.setComissionedValue({
     orderId,
-    totalAmount: comissionedValue
-  }
-  await comissionedRepository.setComissionedValue(comissionedParams)
+    totalAmount: commission,
+    commissionRate: rate
+  }, options)
 }
 
 async function getUserWallet (authorId) {
   const wallet = await walletRepository.getUserWallet(authorId)
+  const total = wallet.reduce((sum, entry) => sum + Number(entry.totalAmount), 0)
 
   return {
-    walletAmount: wallet.reduce((sum, wallet) => sum + wallet.totalAmount, 0).toLocaleString('pt-BR', {
+    walletAmount: total.toLocaleString('pt-BR', {
       style: 'currency',
       currency: 'BRL'
     }),
     historyWallet: wallet
   }
 }
-
 
 export default {
   saveWallet,

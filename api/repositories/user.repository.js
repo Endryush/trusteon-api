@@ -1,57 +1,37 @@
 import User from "../models/user.model.js";
 
 async function registerUser (user) {
-  try {
-    return await User.create(user)
-  } catch (error) {
-    throw error 
-  }
+  return await User.create(user)
 }
 
 async function getUserByEmail (email) {
-  try {
-    return await User.findOne({
-      where: { email },
-      attributes: { exclude: ['createdAt', 'updatedAt'] }
-    })
-  } catch (error) {
-    throw error
-  }
+  return await User.findOne({
+    where: { email },
+    attributes: { exclude: ['createdAt', 'updatedAt'] }
+  })
 }
 
 async function getUserById (id) {
-  try {
-    return await User.findOne({
-      where: { id },
-      attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
-    })
-  } catch (error) {
-    throw error
-  }
+  return await User.findOne({
+    where: { id },
+    attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
+  })
 }
 
 async function updateReputation (id, reputation, isUser = false) {
-  try {
-    const field = isUser ? 'authorReputation' : 'userReputation' 
-    return await User.update({ [field]: reputation },  {
-      where: { id },
-    })
-  } catch (error) {
-    throw error
-  }
+  const field = isUser ? 'authorReputation' : 'userReputation'
+  return await User.update({ [field]: reputation }, {
+    where: { id },
+  })
 }
 
 async function updateUser (userId, fields) {
-  try {
-    await User.update(fields, {
-      where: { id: userId },
-      fields: ['name', 'email', 'userImage']
-    })
+  await User.update(fields, {
+    where: { id: userId },
+    fields: ['name', 'email', 'userImage']
+  })
 
-    return await getUserById(userId)
-  } catch (error) {
-    throw error
-  }
+  return await getUserById(userId)
 }
 
 export default {

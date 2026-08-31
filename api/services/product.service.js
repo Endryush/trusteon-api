@@ -2,28 +2,37 @@ import productRepository from "../repositories/product.repository.js";
 import { formatBeforeUpdateProduct } from "../utils/productUpdate.js";
 import NotFoundException from "../exceptions/NotFoundException.js";
 import ForbiddenException from "../exceptions/ForbiddenException.js";
+import { parsePagination } from "../utils/pagination.js";
 
 async function createProduct (product, requesterId) {
   return await productRepository.createProduct({
-    ...product,
+    name: product.name,
+    totalAmount: product.totalAmount,
+    description: product.description,
+    categories: product.categories,
+    productImages: product.productImages,
+    serviceStatus: product.serviceStatus,
     authorId: requesterId
   })
 }
 
-async function getProducts (authorId) {
-  const allServices = authorId ? await productRepository.getProductByAuthor(authorId) : await productRepository.getProducts()
-  if (authorId) {
-    allServices.map((service) => {
-      return service.productImages = parseProductImages(service.productImages)
-    })
-  } else {
-    allServices.services.map((service) => {
-      return service.productImages = parseProductImages(service.productImages)
-    })
-  }
-  return allServices
-}
+async function getProducts (query) {
+  const pagination = parsePagination(query)
+  const listing = query.authorId
+    ? await productRepository.getProductByAuthor(query.authorId, pagination)
+    : await productRepository.getProducts(pagination)
 
+  listing.services = listing.services.map((service) => {
+    service.productImages = parseProductImages(service.productImages)
+    return service
+  })
+
+  return {
+    ...listing,
+    page: pagination.page,
+    pageSize: pagination.pageSize
+  }
+}
 
 async function getProductById(id) {
   const service = await productRepository.getProductById(id)
@@ -53,9 +62,16 @@ async function deleteProduct (id, requesterId) {
 }
 
 function parseProductImages (images) {
-  return images.map((image) => JSON.parse(image));
+  if (!Array.isArray(images)) return []
+  return images.map((image) => {
+    if (typeof image !== 'string') return image
+    try {
+      return JSON.parse(image)
+    } catch {
+      return image
+    }
+  })
 }
-
 
 export default {
   createProduct,

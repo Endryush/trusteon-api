@@ -12,7 +12,7 @@ const Order = db.define('orders', {
     primaryKey: true
   },
   totalAmount: {
-    type: DataTypes.DOUBLE,
+    type: DataTypes.DECIMAL(10, 2),
     allowNull: false
   },
   authorId: {

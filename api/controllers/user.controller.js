@@ -1,11 +1,9 @@
 import userService from "../services/user.service.js"
-import { validateUser } from "../helpers/validateUserRequest.js";
+import logger from "../logger.js"
 
 async function registerUser (req, res, next) {
   try {
-    const user = req.body
-    validateUser(user)
-    const userCreated = await userService.registerUser(user)
+    const userCreated = await userService.registerUser(req.body)
 
     res.header('Authorization', `Bearer ${userCreated.token}`)
     res.status(201).send(userCreated.user)

@@ -1,13 +1,7 @@
 import TrusteonComissioned from "../models/comissioned.model.js";
 
-
-
-async function setComissionedValue (wallet) {
-  try {
-    return await TrusteonComissioned.create(wallet);   
-  } catch (error) {
-    throw error
-  }
+async function setComissionedValue (wallet, options = {}) {
+  return await TrusteonComissioned.create(wallet, options)
 }
 
 export default {

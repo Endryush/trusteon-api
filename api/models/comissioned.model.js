@@ -15,11 +15,17 @@ const TrusteonComissioned = db.define('trusteon_comissioned', {
       model: Order,
       key: 'id'
     },
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   totalAmount: {
-    type: DataTypes.DOUBLE,
+    type: DataTypes.DECIMAL(10, 2),
     allowNull: false
+  },
+  commissionRate: {
+    type: DataTypes.DECIMAL(5, 4),
+    allowNull: false,
+    defaultValue: 0.15
   },
 }, { timestamps: true, underscored: true, tableName: 'trusteon_comissioned' })
 

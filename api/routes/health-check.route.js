@@ -1,15 +1,17 @@
-import express from 'express';
+import express from 'express'
+import db from '../config/db.js'
+import logger from '../logger.js'
 
 const router = express.Router()
 
-router
-  .get('/', (req, res) => {
-    try {
-      res.status(200).send('Server is running')
-    } catch (error) {
-      logger.error(`error on get health-check ${error}`)
-      res.status(500).send(`Error: ${error}`)
-    }
-  })
+router.get('/', async (req, res) => {
+  try {
+    await db.authenticate()
+    res.status(200).json({ status: 'ok' })
+  } catch (error) {
+    logger.error(`health-check failed: ${error.message}`)
+    res.status(503).json({ status: 'error' })
+  }
+})
 
 export default router

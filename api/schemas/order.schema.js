@@ -4,7 +4,6 @@ export const createOrderSchema = z.object({
   totalAmount: z.coerce.number().positive(),
   authorId: z.coerce.number().int().positive(),
   serviceId: z.coerce.number().int().positive(),
-  orderStatus: z.coerce.number().int().positive().optional()
 })
 
 export const updateOrderStatusSchema = z.object({

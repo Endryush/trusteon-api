@@ -28,7 +28,7 @@ async function createOrder(order, requesterId) {
     totalAmount: order.totalAmount,
     authorId: order.authorId,
     serviceId: order.serviceId,
-    orderStatus: order.orderStatus,
+    orderStatus: ALL_STATUS_ID.OPEN,
     userId: requesterId
   })
 }

@@ -45,7 +45,8 @@ const Order = db.define('orders', {
       model: ServiceStatus,
       key: 'id'
     },
-    allowNull: true
+    allowNull: false,
+    defaultValue: 1
   },
 }, { timestamps: true, underscored: true });
 
